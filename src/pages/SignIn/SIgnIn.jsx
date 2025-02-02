@@ -21,12 +21,19 @@ const SIgnIn = () => {
     // console.log(data);
     signInUser(data.email, data.password)
       .then((result) => {
-        const userEmail = result?.user?.email;
+        // ! 60.2 ->
+        // const userEmail = result?.user?.email;
+        // const email = { email: userEmail };
+        // // console.log(email);
+        // axios.post("http://localhost:5000/jwt", email).then((data) => {
+        //   console.log(data.data);
+        // });
+        const userEmail = result.user?.email;
         const email = { email: userEmail };
-        // console.log(email);
         axios.post("http://localhost:5000/jwt", email).then((data) => {
           console.log(data.data);
         });
+        // ! 60.2 <-
         setUser(result.user);
         setLoader(false);
         alert("Signin successfully!");
