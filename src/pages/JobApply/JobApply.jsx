@@ -5,7 +5,7 @@ import axios from "axios";
 import toast from "react-hot-toast";
 
 const JobApply = () => {
-  const id = useParams();
+  const { id } = useParams();
   const { user } = useAuth();
   //   console.log(id, user);
   const navigate = useNavigate();
@@ -26,18 +26,6 @@ const JobApply = () => {
       github,
       resume,
     };
-    // fetch("http://localhost:5000/job-applications", {
-    //   method: "POST",
-    //   headers: {
-    //     "Content-type": "application/json",
-    //   },
-    //   body: JSON.stringify(jobApplication),
-    // })
-    //   .then((res) => res.json())
-    //   .then((data) => {
-    //     console.log(data);
-    //   })
-    //   .catch((err) => console.error(err));
     axios
       .post("http://localhost:5000/job-applications", jobApplication, {
         headers: {

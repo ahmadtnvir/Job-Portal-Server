@@ -1,6 +1,7 @@
 import useSWR from "swr";
 import useAuth from "../../hooks/useAuth";
 import fetchData from "../../utilities/fetchData";
+import { Link } from "react-router-dom";
 
 const MyPostedJobs = () => {
   const { user } = useAuth();
@@ -27,6 +28,8 @@ const MyPostedJobs = () => {
               <th>Job Title</th>
               <th>Deadline</th>
               <th>Company</th>
+              <th>Application Count</th>
+              <th>Applications</th>
             </tr>
           </thead>
           <tbody>
@@ -36,6 +39,14 @@ const MyPostedJobs = () => {
                 <td>{job.title}</td>
                 <td>{job.applicationDeadline}</td>
                 <td>{job.company}</td>
+                <td>{job.jobApplicationCount}</td>
+                <td>
+                  <Link to={`/viewApplications/${job._id}`}>
+                    <button className="btn btn-xs btn-outline btn-error">
+                      View Applications
+                    </button>
+                  </Link>
+                </td>
               </tr>
             ))}
           </tbody>

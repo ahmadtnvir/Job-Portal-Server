@@ -11,7 +11,9 @@ import axios from "axios";
 
 const fetchData = async (url) => {
   try {
-    const res = await axios.get(url);
+    const res = await axios.get(url, {
+      withCredentials: true,
+    });
     return res.data;
   } catch (error) {
     console.error("Fetch error:", error);

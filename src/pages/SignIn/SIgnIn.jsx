@@ -4,6 +4,7 @@ import { useForm } from "react-hook-form";
 import { useContext } from "react";
 import { AuthContext } from "../../context/AuthContext/AuthProvider";
 import { useLocation, useNavigate } from "react-router-dom";
+import axios from "axios";
 const SIgnIn = () => {
   const location = useLocation();
   // console.log(location.pathname);
@@ -17,17 +18,24 @@ const SIgnIn = () => {
   } = useForm();
 
   const onSubmit = (data, e) => {
-    console.log(data);
+    // console.log(data);
     signInUser(data.email, data.password)
       .then((result) => {
-        setUser(result);
+        const userEmail = result?.user?.email;
+        const email = { email: userEmail };
+        // console.log(email);
+        axios.post("http://localhost:5000/jwt", email).then((data) => {
+          console.log(data.data);
+        });
+        setUser(result.user);
         setLoader(false);
-        alert("User created successfully!");
+        alert("Signin successfully!");
         const form = e.target;
         form.reset();
-        {
-          location?.state ? navigate(location.state) : navigate("/");
-        }
+
+        // {
+        //   location?.state ? navigate(location.state) : navigate("/");
+        // }
       })
       .catch((error) => {
         console.error(error);

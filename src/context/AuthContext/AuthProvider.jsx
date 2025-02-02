@@ -6,6 +6,7 @@ import {
 } from "firebase/auth";
 import { createContext, useEffect, useState } from "react";
 import auth from "../../services/firebase";
+import axios from "axios";
 
 export const AuthContext = createContext(null);
 const AuthProvider = ({ children }) => {
@@ -31,8 +32,51 @@ const AuthProvider = ({ children }) => {
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
       console.log("CURRENT_USER", currentUser);
-      setUser(currentUser);
-      setLoader(false);
+      // ! Send JWT token to server---------------------Start
+      if (currentUser?.email) {
+        const user = {
+          email: currentUser.email,
+        };
+        axios
+          .post("http://localhost:5000/jwt", user, { withCredentials: true })
+          .then((res) => {
+            console.log("Login Token", res.data);
+            setUser(currentUser);
+            setLoader(false);
+          });
+      } else {
+        axios
+          .post(
+            "http://localhost:5000/logout",
+            {},
+            {
+              withCredentials: true,
+            }
+          )
+          .then((res) => {
+            console.log("Logout", res.data);
+            setUser(currentUser);
+            setLoader(false);
+          });
+      }
+      /**
+       * 
+       * Flow Summary
+       * 
+          If Logged In:
+
+          The client sends the user’s email to /jwt.
+          The server responds with a JWT token in a cookie.
+          The client updates its user state.
+
+          If Logged Out:
+
+          The client sends a request to /logout.
+          The server clears the JWT cookie.
+          The client updates its user state to reflect the logged-out status.
+       * 
+      **/
+      // ! Send JWT token to server---------------------End
     });
     return () => {
       unsubscribe();
